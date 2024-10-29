@@ -3,8 +3,12 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
+//使用环境变量存储敏感信息，而不是直接在代码中硬编码
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.DB_NAME;
+
+// const uri = 'mongodb+srv://flyswxf:Wojiaowangyufei1@testcluster.wy2fq.mongodb.net/?retryWrites=true&w=majority&appName=TestCluster';
+// const dbName = 'poem';
 
 // 连接数据库
 mongoose.connect(`${uri}/${dbName}`)
