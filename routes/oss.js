@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
@@ -35,7 +37,7 @@ const credentialsConfig = new Credential.Config({
   // 从环境变量中获取AccessKey Secret的值
   accessKeySecret: process.env.ALIBABA_CLOUD_ACCESS_KEY_SECRET,
   // 要扮演的RAM角色ARN，示例值：acs:ram::123456789012****:role/adminrole，可以通过环境变量ALIBABA_CLOUD_ROLE_ARN设置roleArn
-  roleArn: 'acs:ram::1284423962368172:role/ramosstest',
+  roleArn: 'acs:ram::1393130168969862:role/servant',
   // 角色会话名称，可以通过环境变量ALIBABA_CLOUD_ROLE_SESSION_NAME设置RoleSessionName
   roleSessionName: 'RamOssTest',
   // 设置更小的权限策略，非必填。示例值：{"Statement": [{"Action": ["*"],"Effect": "Allow","Resource": ["*"]}],"Version":"1"}

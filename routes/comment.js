@@ -7,6 +7,8 @@ const userFavorite = require("../models/userFavorite");
 const Comment = require("../models/comment");
 const post = require("../models/postPoem");
 const User = require("../models/user");
+const mongoose = require("mongoose");
+
 router.get("/addComment", async (req, res) => {
   console.log(req.body, "collectPoem");
   let { content = "测试一下", id = "", imgUrl } = req.query;
@@ -41,6 +43,48 @@ router.get("/addComment", async (req, res) => {
     res.send({ status: 200, message: "", data: "评论已更新" });
   }
 });
+
+router.delete('/deleteComment', async (req, res) => {
+  const { commentId, replyId, content } = req.query;
+  const userId = req.user_id;
+
+  if (!mongoose.Types.ObjectId.isValid(commentId)) {
+    return res.status(400).send({ message: '无效的评论 ID' });
+  }
+
+  try {
+    let comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).send({ message: '评论不存在' });
+    }
+
+    if (replyId) {
+      // 删除回复
+      if (!mongoose.Types.ObjectId.isValid(replyId)) {
+        return res.status(400).send({ message: '无效的回复 ID' });
+      }
+
+      const replyIndex = comment.replies.findIndex(reply => reply._id.toString() === replyId);
+      if (replyIndex === -1) {
+        return res.status(404).send({ message: '回复不存在' });
+      }
+
+      comment.replies.splice(replyIndex, 1);
+    } else {
+      await Comment.findByIdAndDelete(commentId);
+      return res.send({ status: 200, message: '评论已删除' });
+    }
+
+    await comment.save();
+    res.send({ status: 200, message: '回复已删除' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: '服务器错误', error: error.message });
+  }
+});
+
+
+
 
 //是否需要分页查询
 router.get("/getComments", async (req, res) => {
